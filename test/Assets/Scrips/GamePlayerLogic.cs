@@ -307,7 +307,7 @@ public class GamePlayerLogic : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)//捡到钥匙
     {
         if (collision.CompareTag("key"))
         {
@@ -829,6 +829,3 @@ public class TemporaryGrayArea : MonoBehaviour// 临时灰色区域组件
     }
 }
 
-//更改内容：
-//21行737-738行去除注释
-//增加137-138、622-682
