@@ -93,25 +93,29 @@ public class GamePlayerLogic : MonoBehaviour
     }
     private void Start()//初始化函数
     {
+        Initialize();
+    }
+    
+    public void Initialize()
+    {
         rb = GetComponent<Rigidbody2D>();//for debug
         if (rb == null)
         {
             //Debug.LogError("未找到Rigidbody2D组件");
         }
-        
-        // 初始化颜料值
-        blackPaintValue = 0f;
-        whitePaintValue = 0f;
-        OnPaintValuesChanged?.Invoke(blackPaintValue, whitePaintValue);
-        
+
+        // 初始化颜料值---已经移动到Gamemeneger中
+        //blackPaintValue = 0f;
+        //whitePaintValue = 0f;
+        //OnPaintValuesChanged?.Invoke(blackPaintValue, whitePaintValue);
+
         // 记录初始位置
         lastPosition = rb.position;
-        
+
         // 初始化背包
         InitializeInventory();
     }
-    
-    
+
     private void InitializeInventory()//初始化背包函数
     {
         // 添加初始物品
@@ -119,26 +123,29 @@ public class GamePlayerLogic : MonoBehaviour
         AddItemToInventory("WhitePaintBottle", 0);
         AddItemToInventory("GrayPaintBottle", 0);
     }
-    
+
 
     private void Update()//实时更新函数
     {
         // 获取输入
         HandleInput();
-        
-       /*
-        // 更新计时器
-        UpdateTimers();
-        */
-        
+
+        /*
+         // 更新计时器
+         UpdateTimers();
+         */
+
         // 处理颜料值变化
         HandlePaintValues();
 
         // 检测区域类型
         //DetectAreaType();
 
-        //// 处理第三关玩家颜色变化
-        //PaintController();
+        // 处理第三关玩家颜色变化
+        if (GameManager.Instance.CurrentLevel == 3)
+        {
+            PaintController();
+        }
     }
 
 
@@ -184,6 +191,11 @@ public class GamePlayerLogic : MonoBehaviour
         {
             Interact();
         }
+
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            Debug.Log(GetInventory());
+        }
     }
     
 
@@ -219,7 +231,7 @@ public class GamePlayerLogic : MonoBehaviour
 
     private void HandlePaintValues()//颜料值处理函数
     {
-        Debug.Log("黑色"+blackPaintValue +"白色"+ whitePaintValue);
+        //Debug.Log("黑色" + blackPaintValue + "白色" + whitePaintValue);
         // 根据当前区域类型处理颜料值
         switch (currentAreaType)
         {
@@ -280,7 +292,7 @@ public class GamePlayerLogic : MonoBehaviour
     //    }
     //}
 
-    private void OnTriggerEnter2D(Collider2D collision)// 检测进入的区域类型
+    private void OnTriggerStay2D(Collider2D collision)// 检测进入的区域类型
     {
         AreaTypeComponent areaComponent = collision.GetComponent<AreaTypeComponent>();
         if (areaComponent != null)
@@ -292,6 +304,16 @@ public class GamePlayerLogic : MonoBehaviour
                 OnAreaChanged?.Invoke(currentAreaType);
                 Debug.Log(collision);
             }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("key"))
+        {
+            AddItemToInventory("key", 1);
+            Destroy(collision.gameObject);
+            Debug.Log("获得钥匙,当前"+GetItemCount("key"));
         }
     }
 
@@ -621,7 +643,8 @@ public class GamePlayerLogic : MonoBehaviour
     {
         return new Dictionary<string, int>(inventory);
     }
-    
+
+
     // 死亡方法
     private void Die()
     {
@@ -669,7 +692,7 @@ public class GamePlayerLogic : MonoBehaviour
         }
     }
     //这里是控制第三关玩家自身染色的函数
-    private void PaintController()
+    public void PaintController()
     {
         PlayerColorState colorState;
         // 如果黑白颜料值都大于0，则为灰色

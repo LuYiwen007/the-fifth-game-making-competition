@@ -22,8 +22,7 @@ public class Exit : MonoBehaviour
             }
             else
             {
-                Debug.Log("没有钥匙，无法离开");
-                return;
+                Debug.Log("钥匙不足，无法离开，当前："+gamePlayerLogic.GetItemCount("key"));
             }
         }
     }
