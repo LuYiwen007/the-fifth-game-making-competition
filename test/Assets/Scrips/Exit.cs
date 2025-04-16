@@ -16,8 +16,8 @@ public class Exit : MonoBehaviour
             if (gamePlayerLogic.HasItem("key", 3))//判断玩家是否集齐3把钥匙
             {
                 gamePlayerLogic.RemoveItemFromInventory("key", 3);
-                Animator animator = gameObject.GetComponent<Animator>();
-                animator.SetTrigger("Exit");// 播放动画
+                //Animator animator = gameObject.GetComponent<Animator>();
+                //animator.SetTrigger("Exit");// 播放动画
                 GameManager.Instance.NextLevel();//加载下一个关卡
             }
             else
@@ -27,7 +27,7 @@ public class Exit : MonoBehaviour
         }
     }
 
-    //动画结束后，加载下一个场景
+    //动画结束后，执行切换关卡逻辑
     public void LoadNextScene()
     {
         GameManager.Instance.NextLevel();//加载下一个关卡

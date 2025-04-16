@@ -142,10 +142,11 @@ public class GamePlayerLogic : MonoBehaviour
         //DetectAreaType();
 
         // 处理第三关玩家颜色变化
-        if (GameManager.Instance.CurrentLevel == 3)
+        if (GameManager.Instance != null && GameManager.Instance.CurrentLevel == 3)
         {
             PaintController();
         }
+
     }
 
 
@@ -302,7 +303,6 @@ public class GamePlayerLogic : MonoBehaviour
             {
                 currentAreaType = newAreaType;
                 OnAreaChanged?.Invoke(currentAreaType);
-                Debug.Log(collision);
             }
         }
     }
