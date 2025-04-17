@@ -391,8 +391,25 @@ public class GamePlayerLogic : MonoBehaviour
             {
                 temporaryGrayArea.SetDuration(temporaryGrayAreaDuration);
             }
+
+            // 处理范围内的红色墙壁
+            float grayAreaRadius = 2f; // 设置灰色区域的影响范围
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, grayAreaRadius);
+            foreach (Collider2D collider in colliders)
+            {
+                // 检查是否是红色墙壁
+                RedWallBase wall = collider.GetComponent<RedWallBase>();
+                if (wall != null)
+                {
+                    wall.OnTemporaryGrayArea();
+                    
+                    // 延迟调用结束效果
+                    StartCoroutine(EndTemporaryGrayWall(wall, temporaryGrayAreaDuration));
+                }
+            }
         }
     }
+    
     
 
     /*private void StartDash()//闪避函数
