@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     public int CurrentLevel { get; private set; } = 1; // 当前关卡，默认为0，表示游戏开始前的状态
+    public TrapLogic trapLogic; // 绑定场景中的 TrapLogic 脚本
     private void Awake()
     {
         InitializeLevelLogic();
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
     private void InitializeLevelLogic()//初始化关卡逻辑
     {
         GamePlayerLogic player = Object.FindFirstObjectByType<GamePlayerLogic>();
+        trapLogic.StartTrapCycle(); // 启动陷阱逻辑
         if (player != null)
         {
             player.SetBlackPaintValue(0);

@@ -6,6 +6,7 @@ using UnityEngine;
 public class Exit : MonoBehaviour
 {
     GamePlayerLogic gamePlayerLogic;
+    public TrapLogic trapLogic; // 绑定场景中的 TrapLogic 脚本
 
     //检测玩家触碰到出口、是否有三把钥匙
     private void OnTriggerEnter2D(Collider2D collision)
@@ -15,6 +16,7 @@ public class Exit : MonoBehaviour
             gamePlayerLogic = collision.gameObject.GetComponent<GamePlayerLogic>();
             if (gamePlayerLogic.HasItem("key", 3))//判断玩家是否集齐3把钥匙
             {
+                trapLogic.DeactivateTrap(); // 禁用陷阱逻辑
                 gamePlayerLogic.RemoveItemFromInventory("key", 3);
                 //Animator animator = gameObject.GetComponent<Animator>();
                 //animator.SetTrigger("Exit");// 播放动画
