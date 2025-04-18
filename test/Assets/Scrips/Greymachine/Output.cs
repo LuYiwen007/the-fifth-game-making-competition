@@ -15,10 +15,23 @@ public class Output : MonoBehaviour
     {
         player = GetComponent<GamePlayerLogic>();
     }
-
-    private void Synthesis()
+    
+    private void Enablesynthesis()
     {
         synthesis = true;
+    }
+
+    private void Update()
+    {
+        if (synthesis == true)
+        {
+            // 关闭合成面板  
+            blackinput.hasblackpaint = false;
+            whiteinput.haswhitepaint = false;
+            // 添加灰色颜料瓶  
+            Inventory.Instance.AddItemToInventory("GreyPaintBottle", 1);
+            synthesis = false;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -30,14 +43,7 @@ public class Output : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.F))
             {
                 // 显示合成面板  
-                synthesisbutton.gameObject.SetActive(true); // 显示合成按钮，合成按钮将绑定Synthesis()方法
-                if (synthesis == true)
-                {
-                    // 关闭合成面板  
-                    blackinput.hasblackpaint = false;
-                    whiteinput.haswhitepaint = false;
-                    player.AddItemToInventory("GreyPaintBottle", 1); // 添加灰色颜料瓶  
-                }
+                synthesisbutton.gameObject.SetActive(true); // 显示合成按钮，合成按钮将绑定Enablesynthesis()方法
             }
         }
     }

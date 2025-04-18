@@ -14,17 +14,17 @@ public class Exit : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))//玩家触碰出口检测
         {
             gamePlayerLogic = collision.gameObject.GetComponent<GamePlayerLogic>();
-            if (gamePlayerLogic.HasItem("key", 3))//判断玩家是否集齐3把钥匙
+            if (Inventory.Instance.HasItem("key", 3))//判断玩家是否集齐3把钥匙
             {
                 trapLogic.DeactivateTrap(); // 禁用陷阱逻辑
-                gamePlayerLogic.RemoveItemFromInventory("key", 3);
+                Inventory.Instance.RemoveItemFromInventory("key", 3);
                 //Animator animator = gameObject.GetComponent<Animator>();
                 //animator.SetTrigger("Exit");// 播放动画
                 GameManager.Instance.NextLevel();//加载下一个关卡
             }
             else
             {
-                Debug.Log("钥匙不足，无法离开，当前："+gamePlayerLogic.GetItemCount("key"));
+                Debug.Log("钥匙不足，无法离开，当前："+ Inventory.Instance.GetItemCount("key"));
             }
         }
     }

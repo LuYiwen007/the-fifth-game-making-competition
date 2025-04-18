@@ -34,12 +34,12 @@ public class Bottle : MonoBehaviour, IPickupable
         GamePlayerLogic playerLogic = player.GetComponent<GamePlayerLogic>();
         if (playerLogic != null)
         {
-            if (playerLogic.AddItemToInventory(GetItemName(), GetItemAmount()))
+            if (Inventory.Instance.AddItemToInventory(GetItemName(), GetItemAmount()))
             {
                 
                 // 拾取成功，销毁物品
                 Destroy(gameObject);
-                Debug.Log(playerLogic.GetInventory());
+                Debug.Log(Inventory.Instance.GetInventory());
             }
             else
             {

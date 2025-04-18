@@ -8,9 +8,10 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     public int CurrentLevel { get; private set; } = 1; // 当前关卡，默认为0，表示游戏开始前的状态
     public TrapLogic trapLogic; // 绑定场景中的 TrapLogic 脚本
+    public GamePlayerLogic playerLogic;
+
     private void Awake()
     {
-        InitializeLevelLogic();
         if (Instance == null)
         {
             Instance = this;
@@ -20,29 +21,29 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        InitializeLevelLogic();
     }
-
     public void NextLevel()//加载下一个关卡
     {
         CurrentLevel++;
         Debug.Log($"当前关卡: {CurrentLevel}");
         InitializeLevelLogic();
     }
-
     private void InitializeLevelLogic()//初始化关卡逻辑
-    {
-        GamePlayerLogic player = Object.FindFirstObjectByType<GamePlayerLogic>();
-        trapLogic.StartTrapCycle(); // 启动陷阱逻辑
-        if (player != null)
-        {
-            player.SetBlackPaintValue(0);
-            player.SetWhitePaintValue(0);
-            Debug.Log("重置玩家颜料值");
-        }
-        else
-        {
-            Debug.LogError("未找到 GamePlayerLogic 脚本！");
-        }
+    {   
+        //初始化玩家
+        playerLogic.InitializePlayer();
+        
+        //重置颜料值
+        playerLogic.SetBlackPaintValue(0);
+        playerLogic.SetWhitePaintValue(0);
+
+        //启动陷阱逻辑
+        trapLogic.StartTrapCycle();
+
+        //初始化背包
+        Inventory.Instance.InitializeInventory();
+
         switch (CurrentLevel)
         {
             case 0:
@@ -70,5 +71,11 @@ public class GameManager : MonoBehaviour
                 //SceneManager.LoadScene("MainMenu");
                 break;
         }
+    }
+
+    public void RestartLevel()//重新开始当前关卡
+    {
+        Debug.Log($"重新开始当前关卡: {CurrentLevel}");
+        InitializeLevelLogic();
     }
 }
