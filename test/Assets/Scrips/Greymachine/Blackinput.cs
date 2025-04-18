@@ -13,7 +13,7 @@ public class Blackinput : MonoBehaviour
             //展示ui，询问玩家是否加入黑色颜料（按F确定）（未添加）
             if (Input.GetKeyDown(KeyCode.F))
             {
-                if (player.RemoveItemFromInventory("BlackPaintBottle", 1))// 从玩家物品栏中移除一个黑色颜料瓶
+                if (Inventory.Instance.RemoveItemFromInventory("BlackPaintBottle", 1))// 从玩家物品栏中移除一个黑色颜料瓶
                 {
                     Debug.Log("成功使用黑色颜料瓶");
                     //展示ui:成功放入黑色颜料瓶！提示背包中黑色颜料瓶减一（未添加）

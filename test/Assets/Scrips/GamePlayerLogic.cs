@@ -49,7 +49,7 @@ public class GamePlayerLogic : MonoBehaviour
     // 私有变量
     private Rigidbody2D rb;//挂载刚体组件
     private Vector2 moveDirection;
-    private bool isDashing = false;
+    //private bool isDashing = false;
     private bool isSprinting = false;
     private Vector2 lastPosition; // 上一帧的位置
     
