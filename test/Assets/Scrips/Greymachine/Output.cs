@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Output : MonoBehaviour
 {
@@ -8,10 +9,16 @@ public class Output : MonoBehaviour
     public Whiteinput whiteinput = new Whiteinput();
     private bool synthesis = false;
     private GamePlayerLogic player;
+    public Button synthesisbutton; //绑定合成按钮
 
     private void Start()
     {
         player = GetComponent<GamePlayerLogic>();
+    }
+
+    private void Synthesis()
+    {
+        synthesis = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -23,8 +30,7 @@ public class Output : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.F))
             {
                 // 显示合成面板  
-                // 如果合成成功，将synthesis改为true  
-                synthesis = true;//这里先省略掉合成的逻辑，直接设置为true
+                synthesisbutton.gameObject.SetActive(true); // 显示合成按钮，合成按钮将绑定Synthesis()方法
                 if (synthesis == true)
                 {
                     // 关闭合成面板  
