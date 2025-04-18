@@ -760,54 +760,6 @@ public interface IPickupable
     void OnPickup(GameObject player);
 }
 
-// 颜料瓶物品类
-public class PaintBottle : MonoBehaviour, IPickupable
-{
-    public enum BottleType
-    {
-        Black,
-        White,
-        Gray
-    }
-    
-    public BottleType bottleType;
-    public int amount = 1;
-    
-    public string GetItemName()
-    {
-        switch (bottleType)
-        {
-            case BottleType.Black:
-                return "BlackPaintBottle";//黑色颜料瓶
-            case BottleType.White:
-                return "WhitePaintBottle";//白色颜料瓶
-            case BottleType.Gray:
-                return "GrayPaintBottle";//灰色颜料瓶
-            default:
-                return "UnknownBottle";//未知颜料瓶
-        }
-    }
-    
-    public int GetItemAmount()
-    {
-        return amount;
-    }
-    
-    public void OnPickup(GameObject player)
-    {
-        GamePlayerLogic playerLogic = player.GetComponent<GamePlayerLogic>();
-        if (playerLogic != null)
-        {
-            if (playerLogic.AddItemToInventory(GetItemName(), GetItemAmount()))
-            {
-                // 拾取成功，销毁物品
-                Destroy(gameObject);
-            }
-        }
-    }
-
-}
-
 public class TemporaryGrayArea : MonoBehaviour// 临时灰色区域组件
 {
     private float duration;//灰色区域持续时间
