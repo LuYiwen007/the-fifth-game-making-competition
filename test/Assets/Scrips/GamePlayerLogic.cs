@@ -55,7 +55,6 @@ public class GamePlayerLogic : MonoBehaviour
     
     // 事件
     public UnityEvent<float, float> OnPaintValuesChanged; // 参数：黑色颜料值，白色颜料值
-    public UnityEvent OnDeath;
     
     // 交互接口
     public delegate void InteractionCallback(GameObject interactable);
@@ -128,6 +127,23 @@ public class GamePlayerLogic : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 更改颜料值
+    /// </summary>
+    /// <param name="color"></param>
+    /// <param name="value"></param>
+    public void ChangePaintvalue(string color,int value)
+    {
+        switch (color)
+        {
+            case "black":
+                blackPaintValue += value;
+                break;
+            case "white":
+                whitePaintValue += value;
+                break;
+        }
+    }
     private void HandlePaintValues()//颜料值处理函数
     {
         //Debug.Log("黑色" + blackPaintValue + "白色" + whitePaintValue);
@@ -163,7 +179,7 @@ public class GamePlayerLogic : MonoBehaviour
         // 检查是否死亡
         if (blackPaintValue >= maxPaintValue || whitePaintValue >= maxPaintValue)
         {
-            Die();
+            GameManager.Instance.Die();
         }
     }
 
@@ -192,7 +208,7 @@ public class GamePlayerLogic : MonoBehaviour
         if (collision.CompareTag("trap"))
         {
             Debug.Log("踩到陷阱");
-            Die();
+            GameManager.Instance.Die();
         }
     }
 
@@ -322,7 +338,7 @@ public class GamePlayerLogic : MonoBehaviour
         // 检查角色是否死亡
         if (blackPaintValue >= maxPaintValue)
         {
-            Die();
+            GameManager.Instance.Die();
         }
     }
     
@@ -334,7 +350,7 @@ public class GamePlayerLogic : MonoBehaviour
         // 检查角色是否死亡
         if (whitePaintValue >= maxPaintValue)
         {
-            Die();
+            GameManager.Instance.Die();
         }
     }
     
@@ -356,19 +372,6 @@ public class GamePlayerLogic : MonoBehaviour
     public AreaType GetCurrentAreaType()//获取当前区域类型函数
     {
         return currentAreaType;
-    }
-
-    // 死亡方法
-    private void Die()
-    {
-        // 触发死亡事件
-        OnDeath?.Invoke();
-        
-        // 禁用控制器
-        enabled = false;
-        
-        // 可以在这里添加死亡动画或特效
-        //Debug.Log("角色死亡");
     }
     
     //在编辑器中可视化攻击和交互范

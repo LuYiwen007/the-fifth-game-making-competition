@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class Output : MonoBehaviour
 {
-    public Blackinput blackinput = new Blackinput();
-    public Whiteinput whiteinput = new Whiteinput();
+    public Blackinput blackinput;
+    public Whiteinput whiteinput;
     private bool synthesis = false;
     private GamePlayerLogic player;
     public Button synthesisbutton; //绑定合成按钮
