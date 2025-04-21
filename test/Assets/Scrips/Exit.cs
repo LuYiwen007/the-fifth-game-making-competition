@@ -28,10 +28,4 @@ public class Exit : MonoBehaviour
             }
         }
     }
-
-    //动画结束后，执行切换关卡逻辑
-    public void LoadNextScene()
-    {
-        GameManager.Instance.NextLevel();//加载下一个关卡
-    }
 }

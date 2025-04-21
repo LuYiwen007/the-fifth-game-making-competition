@@ -55,7 +55,8 @@ public class GamePlayerLogic : MonoBehaviour
     
     // 事件
     public UnityEvent<float, float> OnPaintValuesChanged; // 参数：黑色颜料值，白色颜料值
-    
+    public UnityEvent OnDeath;
+
     // 交互接口
     public delegate void InteractionCallback(GameObject interactable);
     public event InteractionCallback OnInteract;
@@ -85,7 +86,7 @@ public class GamePlayerLogic : MonoBehaviour
         lastPosition = rb.position;
 
         // 初始化背包
-        Inventory.Instance.InitializeInventory();
+        //Inventory.Instance.InitializeInventory();
     }
 
     private void Update()//实时更新函数
@@ -127,22 +128,17 @@ public class GamePlayerLogic : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 更改颜料值
-    /// </summary>
-    /// <param name="color"></param>
-    /// <param name="value"></param>
-    public void ChangePaintvalue(string color,int value)
+    // 死亡方法
+    public void Die()
     {
-        switch (color)
-        {
-            case "black":
-                blackPaintValue += value;
-                break;
-            case "white":
-                whitePaintValue += value;
-                break;
-        }
+        Debug.Log("角色死亡");
+        // 触发死亡事件
+        OnDeath?.Invoke();
+
+        // 禁用控制器
+        enabled = false;
+
+        //展示死亡ui
     }
     private void HandlePaintValues()//颜料值处理函数
     {
@@ -179,7 +175,7 @@ public class GamePlayerLogic : MonoBehaviour
         // 检查是否死亡
         if (blackPaintValue >= maxPaintValue || whitePaintValue >= maxPaintValue)
         {
-            GameManager.Instance.Die();
+            Die();
         }
     }
 
@@ -208,7 +204,7 @@ public class GamePlayerLogic : MonoBehaviour
         if (collision.CompareTag("trap"))
         {
             Debug.Log("踩到陷阱");
-            GameManager.Instance.Die();
+            Die();
         }
     }
 
@@ -338,7 +334,7 @@ public class GamePlayerLogic : MonoBehaviour
         // 检查角色是否死亡
         if (blackPaintValue >= maxPaintValue)
         {
-            GameManager.Instance.Die();
+            Die();
         }
     }
     
@@ -350,7 +346,7 @@ public class GamePlayerLogic : MonoBehaviour
         // 检查角色是否死亡
         if (whitePaintValue >= maxPaintValue)
         {
-            GameManager.Instance.Die();
+            Die();
         }
     }
     

@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     public int CurrentLevel { get; private set; } = 1; // 当前关卡，默认为0，表示游戏开始前的状态
     public TrapLogic trapLogic; // 绑定场景中的 TrapLogic 脚本
     public GamePlayerLogic playerLogic;
-    public UnityEvent OnDeath;
 
     private void Awake()
     {
@@ -74,19 +73,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-
-    // 死亡方法
-    public void Die()
-    {
-        Debug.Log("角色死亡");
-        // 触发死亡事件
-        OnDeath?.Invoke();
-
-        // 禁用控制器
-        enabled = false;
-
-        //展示死亡ui
-    }
+   
     public void RestartLevel()//重新开始当前关卡
     {
         Debug.Log($"重新开始当前关卡: {CurrentLevel}");

@@ -14,7 +14,7 @@ public class blackarea : MonoBehaviour
         // 确保组件存在
         if (areaTypeComponent != null)
         {
-            // 设置为白色区域
+            // 设置为黑色区域
             areaTypeComponent.areaType = GamePlayerLogic.AreaType.Black;
         }
         else

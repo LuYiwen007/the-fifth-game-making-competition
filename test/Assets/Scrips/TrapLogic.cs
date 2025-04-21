@@ -9,12 +9,6 @@ public class TrapLogic : MonoBehaviour
     public float trapCooldown; // 冷却时间
     private Coroutine trapCycleCoroutine; // 用于存储陷阱循环协程的引用
 
-    enum TrapType
-    {
-        WhiteTrap,
-        BlackTrap,
-    }
-
     // 启动陷阱循环
     public void StartTrapCycle()
     {
@@ -57,22 +51,7 @@ public class TrapLogic : MonoBehaviour
         if (collision.CompareTag("Player")) // 检测到玩家
         {
             GamePlayerLogic player = collision.GetComponent<GamePlayerLogic>(); // 获取玩家逻辑组件
-            if (trap.CompareTag("BlackTrap")) // 检查陷阱是否为黑色陷阱
-            {
-                // 处理黑色陷阱逻辑
-                Debug.Log("黑色陷阱触发");
-                player.ChangePaintvalue("black",30);
-            }
-            else if (trap.CompareTag("WhiteTrap")) // 检查陷阱是否为白色陷阱
-            {
-                // 处理白色陷阱逻辑
-                Debug.Log("白色陷阱触发");
-                player.ChangePaintvalue("white", 30);
-            }
-            else
-            {
-                Debug.Log("未知陷阱类型,检查陷阱是否已经绑定对应标签");
-            }
+            
         }
     }
 }
