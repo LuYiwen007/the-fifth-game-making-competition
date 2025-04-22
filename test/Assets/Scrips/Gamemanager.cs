@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    public int CurrentLevel { get; private set; } = 1; // 当前关卡，默认为0，表示游戏开始前的状态
+    public int CurrentLevel { get; private set; } = 1; // 当前关卡
     public TrapLogic trapLogic; // 绑定场景中的 TrapLogic 脚本
-    public GamePlayerLogic playerLogic;
+    public GamePlayerLogic player;
 
     private void Awake()
     {
@@ -33,11 +33,11 @@ public class GameManager : MonoBehaviour
     private void InitializeLevelLogic()//初始化关卡逻辑
     {   
         //初始化玩家
-        playerLogic.InitializePlayer();
+        player.InitializePlayer();
         
         //重置颜料值
-        playerLogic.SetBlackPaintValue(0);
-        playerLogic.SetWhitePaintValue(0);
+        player.SetBlackPaintValue(0);
+        player.SetWhitePaintValue(0);
 
         //启动陷阱逻辑
         trapLogic.StartTrapCycle();
@@ -47,11 +47,11 @@ public class GameManager : MonoBehaviour
 
         switch (CurrentLevel)
         {
-            case 0:
-                Debug.Log("游戏开始，初始化主界面逻辑");
-                //SceneManager.LoadScene("MainMenu");
-                // 在这里添加游戏开始时的初始化逻辑
-                break;
+            //case 0:
+            //    Debug.Log("游戏开始，初始化主界面逻辑");
+            //    //SceneManager.LoadScene("MainMenu");
+            //    // 在这里添加游戏开始时的初始化逻辑
+                  //break;
             case 1:
                 Debug.Log("初始化第一关逻辑");
                 //SceneManager.LoadScene("Level1");
@@ -68,8 +68,9 @@ public class GameManager : MonoBehaviour
 
                 break;
             default:
-                Debug.Log("游戏完成，加载主菜单或其他场景");//在这里加载主菜单或其他场景
-                //SceneManager.LoadScene("MainMenu");
+                //Debug.Log("游戏完成，加载主菜单或其他场景");
+                ////SceneManager.LoadScene("MainMenu");
+                UIController.Instance.SetGameState(UIController.GameState.Win);
                 break;
         }
     }
@@ -78,5 +79,14 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log($"重新开始当前关卡: {CurrentLevel}");
         InitializeLevelLogic();
+    }
+    public void StartGame()
+    {
+        UIController.Instance.SetGameState(UIController.GameState.InGame);
+    }
+
+    public void GameOver()
+    {
+        UIController.Instance.SetGameState(UIController.GameState.GameOver);
     }
 }

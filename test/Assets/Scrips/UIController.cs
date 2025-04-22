@@ -1,0 +1,67 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+//using UnityEngine.UI;
+
+//逻辑是游戏界面永远不会禁用，这个脚本用来切换游戏界面之上的UI
+public class UIController : MonoBehaviour
+{
+    public static UIController Instance { get; private set; }
+    [Header("界面容器")]
+    [SerializeField] private Transform _mainInterface;
+    [SerializeField] private Transform _gameInterface;//这个界面是游戏的ui，就是包含颜料指示条那个
+    [SerializeField] private Transform _overInterface;
+    [SerializeField] private Transform _winInterface;
+
+    public enum GameState
+    {
+        MainMenu,
+        InGame,
+        GameOver,
+        Win
+    }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject); // 防止重复创建
+        }
+        else
+        {
+            Instance = this;
+        }
+        SetGameState(GameState.MainMenu);
+    }
+
+    public void SetGameState(GameState newState)//界面切换器
+    {
+        // 禁用所有界面
+        SetAllInterfacesActive(false);
+
+        // 激活对应界面
+        switch (newState)
+        {
+            case GameState.MainMenu:
+                _mainInterface.gameObject.SetActive(true);
+                break;
+            case GameState.InGame:
+                _gameInterface.gameObject.SetActive(true);
+                break;
+            case GameState.GameOver:
+                _overInterface.gameObject.SetActive(true);
+                break;
+            case GameState.Win:
+                _winInterface.gameObject.SetActive(true);
+                break;
+        }
+    }
+
+    private void SetAllInterfacesActive(bool active)
+    {
+        _mainInterface.gameObject.SetActive(active);
+        _gameInterface.gameObject.SetActive(active);
+        _overInterface.gameObject.SetActive(active);
+        _winInterface.gameObject.SetActive(active);
+    }
+}

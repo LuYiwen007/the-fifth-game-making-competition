@@ -138,8 +138,14 @@ public class GamePlayerLogic : MonoBehaviour
         // 禁用控制器
         enabled = false;
 
-        //展示死亡ui
+        //死亡动画
+
+        //切换死亡界面
+        UIController.Instance.SetGameState(UIController.GameState.GameOver);
     }
+
+    
+
     private void HandlePaintValues()//颜料值处理函数
     {
         //Debug.Log("黑色" + blackPaintValue + "白色" + whitePaintValue);
@@ -172,6 +178,8 @@ public class GamePlayerLogic : MonoBehaviour
         // 触发颜料值变化事件
         OnPaintValuesChanged?.Invoke(blackPaintValue, whitePaintValue);
         
+
+
         // 检查是否死亡
         if (blackPaintValue >= maxPaintValue || whitePaintValue >= maxPaintValue)
         {
