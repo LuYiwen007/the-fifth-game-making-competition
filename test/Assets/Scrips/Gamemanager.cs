@@ -7,16 +7,17 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    public int CurrentLevel { get; private set; } = 1; // µ±Ç°¹Ø¿¨
-    public TrapLogic trapLogic; // °ó¶¨³¡¾°ÖĞµÄ TrapLogic ½Å±¾
+    public int CurrentLevel { get; private set; } = 1;
+    public TrapLogic trapLogic; 
     public GamePlayerLogic player;
+    public bool hasrespwam=false;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // ±£Ö¤ GameManager ÔÚ³¡¾°ÇĞ»»Ê±²»±»Ïú»Ù
+            DontDestroyOnLoad(gameObject); 
         }
         else
         {
@@ -24,60 +25,56 @@ public class GameManager : MonoBehaviour
         }
         InitializeLevelLogic();
     }
-    public void NextLevel()//¼ÓÔØÏÂÒ»¸ö¹Ø¿¨
+    public void NextLevel()
     {
         CurrentLevel++;
-        Debug.Log($"µ±Ç°¹Ø¿¨: {CurrentLevel}");
+        Debug.Log($"å½“å‰å…³å¡: {CurrentLevel}");
         InitializeLevelLogic();
     }
-    private void InitializeLevelLogic()//³õÊ¼»¯¹Ø¿¨Âß¼­
+    private void InitializeLevelLogic()//åˆå§‹åŒ–å…³å¡
     {   
-        //³õÊ¼»¯Íæ¼Ò
+        //åˆå§‹åŒ–ç©å®¶
         player.InitializePlayer();
         
-        //ÖØÖÃÑÕÁÏÖµ
+        //åˆå§‹åŒ–é¢œæ–™å€¼
         player.SetBlackPaintValue(0);
         player.SetWhitePaintValue(0);
 
-        //Æô¶¯ÏİÚåÂß¼­
+        //åˆå§‹åŒ–é™·é˜±
         trapLogic.StartTrapCycle();
 
-        //³õÊ¼»¯±³°ü
+        //åˆå§‹åŒ–èƒŒåŒ…
         Inventory.Instance.InitializeInventory();
 
         switch (CurrentLevel)
         {
             //case 0:
-            //    Debug.Log("ÓÎÏ·¿ªÊ¼£¬³õÊ¼»¯Ö÷½çÃæÂß¼­");
+            //    Debug.Log("ï¿½ï¿½Ï·ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½");
             //    //SceneManager.LoadScene("MainMenu");
-            //    // ÔÚÕâÀïÌí¼ÓÓÎÏ·¿ªÊ¼Ê±µÄ³õÊ¼»¯Âß¼­
                   //break;
             case 1:
-                Debug.Log("³õÊ¼»¯µÚÒ»¹ØÂß¼­");
+                Debug.Log("åˆå§‹åŒ–å…³å¡ä¸€");
                 //SceneManager.LoadScene("Level1");
-                // ÔÚÕâÀïÌí¼ÓµÚÒ»¹ØµÄ³õÊ¼»¯Âß¼­
                 break;
             case 2:
-                Debug.Log("³õÊ¼»¯µÚ¶ş¹ØÂß¼­");
+                Debug.Log("åˆå§‹åŒ–å…³å¡äºŒ");
                 //SceneManager.LoadScene("Level2");
-                // ÔÚÕâÀïÌí¼ÓµÚ¶ş¹ØµÄ³õÊ¼»¯Âß¼­
                 break;
             case 3:
-                Debug.Log("³õÊ¼»¯µÚÈı¹ØÂß¼­");
+                Debug.Log("åˆå§‹åŒ–å…³å¡ä¸‰");
                 //SceneManager.LoadScene("Level3"); 
 
                 break;
             default:
-                //Debug.Log("ÓÎÏ·Íê³É£¬¼ÓÔØÖ÷²Ëµ¥»òÆäËû³¡¾°");
                 ////SceneManager.LoadScene("MainMenu");
                 UIController.Instance.SetGameState(UIController.GameState.Win);
                 break;
         }
     }
    
-    public void RestartLevel()//ÖØĞÂ¿ªÊ¼µ±Ç°¹Ø¿¨
+    public void RestartLevel()
     {
-        Debug.Log($"ÖØĞÂ¿ªÊ¼µ±Ç°¹Ø¿¨: {CurrentLevel}");
+        Debug.Log($"é‡æ–°å¼€å§‹å½“å‰å…³å¡: {CurrentLevel}");
         InitializeLevelLogic();
     }
     public void StartGame()

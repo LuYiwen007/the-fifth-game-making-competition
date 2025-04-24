@@ -73,8 +73,11 @@ public class GamePlayerLogic : MonoBehaviour
         Transparent,
         Gray
     }
-    
-    public void InitializePlayer()
+    //重生点
+    public Vector2 currentspwam;
+    public Vector2 lastspwam;
+
+    public void InitializePlayer()//初始化玩家
     {
         rb = GetComponent<Rigidbody2D>();//for debug
         if (rb == null)
@@ -85,8 +88,18 @@ public class GamePlayerLogic : MonoBehaviour
         // 记录初始位置
         lastPosition = rb.position;
 
-        // 初始化背包
-        //Inventory.Instance.InitializeInventory();
+
+    }
+
+    public void PlayerRespwam(Vector2 position)//在记录点重生,暂时让玩家重生后获得一黑一白颜料瓶
+    {
+        rb.MovePosition(position);
+        SetBlackPaintValue(0);
+        SetWhitePaintValue(0);
+        OnDeath=null;
+        Inventory.Instance.InitializeInventory();
+        Inventory.Instance.AddItemToInventory("BlackPaintBottle", 1);
+        Inventory.Instance.AddItemToInventory("WhitePaintBottle", 1);
     }
 
     private void Update()//实时更新函数
@@ -107,6 +120,14 @@ public class GamePlayerLogic : MonoBehaviour
     {
         // 处理移动
         HandleMovement();
+    }
+
+    public void RESpwam()
+    {
+        rb.transform.position = currentspwam;
+        blackPaintValue = 0;
+        whitePaintValue = 0;
+        Inventory.Instance.InitializeInventory();
     }
 
     private void HandleInput()//输入检测函数
@@ -201,7 +222,7 @@ public class GamePlayerLogic : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)//捡到钥匙、踩到陷阱
+    private void OnTriggerEnter2D(Collider2D collision)//捡到钥匙、踩到陷阱、保存记录点
     {
         if (collision.CompareTag("key"))
         {
@@ -213,6 +234,13 @@ public class GamePlayerLogic : MonoBehaviour
         {
             Debug.Log("踩到陷阱");
             Die();
+        }
+        if (collision.CompareTag("spwam"))
+        {
+            Debug.Log("设置出生点");
+            lastspwam=currentspwam;
+            currentspwam=collision.gameObject.transform.position;
+            GameManager.Instance.hasrespwam = true;
         }
     }
 

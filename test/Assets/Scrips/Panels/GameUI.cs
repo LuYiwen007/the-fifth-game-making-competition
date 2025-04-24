@@ -62,6 +62,6 @@ public class GameUI : MonoBehaviour
 
     public void OnPauseButtonClick()
     {
-         
+        UIController.Instance.SetGameState(UIController.GameState.Pause);
     }
 }

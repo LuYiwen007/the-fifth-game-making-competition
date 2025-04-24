@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static GamePlayerLogic;
 
-public class OverPanel : MonoBehaviour
+public class Pause : MonoBehaviour
 {
     GamePlayerLogic player;
     public void OnReSpwamButtonClick()//这里让玩家从记录点重生
@@ -14,7 +14,7 @@ public class OverPanel : MonoBehaviour
             UIController.Instance.SetGameState(UIController.GameState.InGame);
         }
     }
-    public void OnReStartButtonClick()//这里让玩家重新开始失败关卡
+    public void OnReStartButtonClick()//这里让玩家重新开始该关卡
     {
         GameManager.Instance.RestartLevel();
         UIController.Instance.SetGameState(UIController.GameState.InGame);

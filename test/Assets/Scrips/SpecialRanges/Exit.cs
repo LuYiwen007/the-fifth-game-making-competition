@@ -21,6 +21,7 @@ public class Exit : MonoBehaviour
                 //Animator animator = gameObject.GetComponent<Animator>();
                 //animator.SetTrigger("Exit");// 播放动画
                 GameManager.Instance.NextLevel();//加载下一个关卡
+                GameManager.Instance.hasrespwam = false;
             }
             else
             {

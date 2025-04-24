@@ -12,11 +12,13 @@ public class UIController : MonoBehaviour
     [SerializeField] private Transform _gameInterface;//这个界面是游戏的ui，就是包含颜料指示条那个
     [SerializeField] private Transform _overInterface;
     [SerializeField] private Transform _winInterface;
+    [SerializeField] private Transform _pauseInterface;
 
     public enum GameState
     {
         MainMenu,
         InGame,
+        Pause,
         GameOver,
         Win
     }
@@ -53,6 +55,8 @@ public class UIController : MonoBehaviour
                 break;
             case GameState.Win:
                 _winInterface.gameObject.SetActive(true);
+                break;case GameState.Pause:
+                _pauseInterface.gameObject.SetActive(true);
                 break;
         }
     }
@@ -63,5 +67,6 @@ public class UIController : MonoBehaviour
         _gameInterface.gameObject.SetActive(active);
         _overInterface.gameObject.SetActive(active);
         _winInterface.gameObject.SetActive(active);
+        _pauseInterface.gameObject.SetActive(active);
     }
 }
