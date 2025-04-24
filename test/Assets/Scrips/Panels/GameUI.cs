@@ -19,7 +19,7 @@ public class GameUI : MonoBehaviour
 
     public float originalHeight;//指示条原始高度
     public GameObject wjiasubiaoshi;//白色变化加速标识
-    public GameObject bjiasubiaoshi;//黑色变化加速标识
+    public GameObject bjiasubiaoshi;//黑色变化加速标识 
     public GamePlayerLogic player;
 
     void Awake()

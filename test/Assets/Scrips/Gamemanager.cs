@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        InitializeLevelLogic();
+        UIController.Instance.SetGameState(UIController.GameState.MainMenu);
     }
     public void NextLevel()
     {
@@ -48,20 +48,19 @@ public class GameManager : MonoBehaviour
 
         switch (CurrentLevel)
         {
-            //case 0:
-            //    Debug.Log("��Ϸ��ʼ����ʼ���������߼�");
-            //    //SceneManager.LoadScene("MainMenu");
-                  //break;
             case 1:
                 Debug.Log("初始化关卡一");
+                player.TransfornToLevel(1);
                 //SceneManager.LoadScene("Level1");
                 break;
             case 2:
                 Debug.Log("初始化关卡二");
+                player.TransfornToLevel(2);
                 //SceneManager.LoadScene("Level2");
                 break;
             case 3:
                 Debug.Log("初始化关卡三");
+                player.TransfornToLevel(3);
                 //SceneManager.LoadScene("Level3"); 
 
                 break;
@@ -72,18 +71,14 @@ public class GameManager : MonoBehaviour
         }
     }
    
+    public void StartGame()
+    {
+        UIController.Instance.SetGameState(UIController.GameState.InGame);
+        InitializeLevelLogic();
+    }
     public void RestartLevel()
     {
         Debug.Log($"重新开始当前关卡: {CurrentLevel}");
         InitializeLevelLogic();
-    }
-    public void StartGame()
-    {
-        UIController.Instance.SetGameState(UIController.GameState.InGame);
-    }
-
-    public void GameOver()
-    {
-        UIController.Instance.SetGameState(UIController.GameState.GameOver);
     }
 }

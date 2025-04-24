@@ -74,8 +74,14 @@ public class GamePlayerLogic : MonoBehaviour
         Gray
     }
     //重生点
-    public Vector2 currentspwam;
-    public Vector2 lastspwam;
+    private Vector2 currentspwam;
+    private Vector2 lastspwam;
+
+    //关卡出生点
+    [Header("一至三关出生点")]
+    [SerializeField] private Vector3 _position1;
+    [SerializeField] private Vector3 _position2;
+    [SerializeField] private Vector3 _position3;
 
     public void InitializePlayer()//初始化玩家
     {
@@ -244,6 +250,21 @@ public class GamePlayerLogic : MonoBehaviour
         }
     }
 
+    public void TransfornToLevel(int level)
+    {
+        switch (level)
+        {
+            case 1:
+                rb.gameObject.transform.position = _position1;
+                break;
+            case 2:
+                rb.gameObject.transform.position = _position2;
+                break;
+            case 3:
+                rb.gameObject.transform.position = _position3;
+                break;
+        }
+    }
     private void HandleMovement()//移动函数
     {
         //    if (isDashing)

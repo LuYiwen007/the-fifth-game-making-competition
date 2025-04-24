@@ -16,12 +16,16 @@ public class Exit : MonoBehaviour
             gamePlayerLogic = collision.gameObject.GetComponent<GamePlayerLogic>();
             if (Inventory.Instance.HasItem("key", 3))//判断玩家是否集齐3把钥匙
             {
-                trapLogic.DeactivateTrap(); // 禁用陷阱逻辑
-                Inventory.Instance.RemoveItemFromInventory("key", 3);
-                //Animator animator = gameObject.GetComponent<Animator>();
-                //animator.SetTrigger("Exit");// 播放动画
-                GameManager.Instance.NextLevel();//加载下一个关卡
-                GameManager.Instance.hasrespwam = false;
+                if(GameManager.Instance.CurrentLevel!=3)
+                {
+                    trapLogic.DeactivateTrap(); // 禁用陷阱逻辑
+                    Inventory.Instance.RemoveItemFromInventory("key", 3);
+                    //Animator animator = gameObject.GetComponent<Animator>();
+                    //animator.SetTrigger("Exit");// 播放动画
+                    GameManager.Instance.NextLevel();//加载下一个关卡
+                    GameManager.Instance.hasrespwam = false;
+                }
+                UIController.Instance.SetGameState(UIController.GameState.Win);
             }
             else
             {
