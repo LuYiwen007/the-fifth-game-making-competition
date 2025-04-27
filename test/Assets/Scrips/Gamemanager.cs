@@ -32,44 +32,46 @@ public class GameManager : MonoBehaviour
         Debug.Log($"当前关卡: {CurrentLevel}");
         InitializeLevelLogic();
     }
-    private void InitializeLevelLogic()//初始化关卡
-    {   
-        //初始化玩家
-        player.InitializePlayer();
-        
-        //初始化颜料值
-        player.SetBlackPaintValue(0);
-        player.SetWhitePaintValue(0);
-
-        //初始化陷阱
-        trapLogic.StartTrapCycle();
-
-        //初始化背包
-        Inventory.Instance.InitializeInventory();
-
-
-        switch (CurrentLevel)
+    private void InitializeLevelLogic()//初始化关卡，用于开始游戏和重新开始关卡
+    {
         {
-            case 1:
-                Debug.Log("初始化关卡一");
-                player.TransfornToLevel(1);
-                //SceneManager.LoadScene("Level1");
-                break;
-            case 2:
-                Debug.Log("初始化关卡二");
-                player.TransfornToLevel(2);
-                //SceneManager.LoadScene("Level2");
-                break;
-            case 3:
-                Debug.Log("初始化关卡三");
-                player.TransfornToLevel(3);
-                //SceneManager.LoadScene("Level3"); 
+            //初始化玩家
+            player.InitializePlayer();
+            player.currenthp = player.maxhp;
 
-                break;
-            default:
-                ////SceneManager.LoadScene("MainMenu");
-                UIController.Instance.SetGameState(UIController.GameState.Win);
-                break;
+            //初始化颜料值
+            player.SetBlackPaintValue(0);
+            player.SetWhitePaintValue(0);
+
+            //初始化陷阱
+            trapLogic.StartTrapCycle();
+
+            //初始化背包
+            Inventory.Instance.InitializeInventory();
+
+            switch (CurrentLevel)
+            {
+                case 1:
+                    Debug.Log("初始化关卡一");
+                    player.TransfornToLevel(1);
+                    //SceneManager.LoadScene("Level1");
+                    break;
+                case 2:
+                    Debug.Log("初始化关卡二");
+                    player.TransfornToLevel(2);
+                    //SceneManager.LoadScene("Level2");
+                    break;
+                case 3:
+                    Debug.Log("初始化关卡三");
+                    player.TransfornToLevel(3);
+                    //SceneManager.LoadScene("Level3"); 
+
+                    break;
+                default:
+                    ////SceneManager.LoadScene("MainMenu");
+                    UIController.Instance.SetGameState(UIController.GameState.Win);
+                    break;
+            }
         }
     }
    

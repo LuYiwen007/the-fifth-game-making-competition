@@ -46,12 +46,4 @@ public class TrapLogic : MonoBehaviour
             yield return new WaitForSeconds(trapCooldown); // 等待冷却时间
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player")) // 检测到玩家
-        {
-            GamePlayerLogic player = collision.GetComponent<GamePlayerLogic>(); // 获取玩家逻辑组件
-            
-        }
-    }
 }

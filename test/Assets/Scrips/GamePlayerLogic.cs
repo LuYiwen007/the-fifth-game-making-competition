@@ -10,8 +10,8 @@ using Unity.PlasticSCM.Editor.WebApi;
 public class GamePlayerLogic : MonoBehaviour
 {
     //玩家血量
-    private int maxhp  = 3;
-    public int currenthp { get; private set; }
+    public int maxhp { get; set; } = 3;
+    public int currenthp { get; set; }
 
     // 角色移动相关变量
     private float moveSpeed = 5f;
@@ -88,7 +88,7 @@ public class GamePlayerLogic : MonoBehaviour
     [SerializeField] private Vector2 _position2;
     [SerializeField] private Vector2 _position3;
 
-    public void InitializePlayer()//初始化玩家
+    public void InitializePlayer()//初始化玩家，重新开始关卡和从记录点重生都要调用
     {
         enabled = true; // 启用控制器
         rb = GetComponent<Rigidbody2D>();//for debug
@@ -101,11 +101,12 @@ public class GamePlayerLogic : MonoBehaviour
         //lastPosition = rb.position;
 
         //记录出生点
-        currentspwam = rb.position;
+        //currentspwam = rb.position;
     }
 
-    public void PlayerRespwam()
+    public void PlayerRespwam()//这个方法用于玩家从记录点重生
     {
+        currenthp--; // 减少血量
         rb.MovePosition(currentspwam);
         InitializePlayer();
         blackPaintValue = 0;
@@ -166,7 +167,7 @@ public class GamePlayerLogic : MonoBehaviour
         //切换死亡界面
         UIController.Instance.SetGameState(UIController.GameState.GameOver);
 
-        currenthp=Mathf.Clamp(currenthp--, 0, maxhp);
+        //GameUI.Instance.HPUI();
     }
 
     //private void DieAndChangeHP()

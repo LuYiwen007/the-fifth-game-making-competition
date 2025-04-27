@@ -39,7 +39,6 @@ public class Bottle : MonoBehaviour, IPickupable
                 
                 // 拾取成功，销毁物品
                 Destroy(gameObject);
-                Debug.Log(Inventory.Instance.GetInventory());
             }
             else
             {

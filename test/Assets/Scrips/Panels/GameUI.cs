@@ -4,12 +4,12 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static GamePlayerLogic;
 
 //这个类只是用于控制游戏时玩家颜料指示条，并非用于控制UI切换
 //建议创建Canvas后挂载在里面的GamePanel下
 public class GameUI : MonoBehaviour
 {
+
     public static GameUI Instance; 
     public GamePlayerLogic player;
 
@@ -35,12 +35,12 @@ public class GameUI : MonoBehaviour
     public void Awake()
     {
         originalWidth = blackpaintmask.rectTransform.rect.height;
+        originalhpwidth = HPMask.rectTransform.rect.width;
     }
 
     private void Update()
     {
         Showjiasubiaoshi();//更新是否显示加速标识
-        Debug.Log(UIController.Instance.Currentstate());
     }
     public void FixedUpdate()
     {
@@ -69,18 +69,19 @@ public class GameUI : MonoBehaviour
     }
     
     //设置血条UI
-    public void HPUI(float HPpercent)
+    public void HPUI()
     {
-        HPMask.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, HPpercent * originalhpwidth);
+        float percent = (float)player.currenthp / player.maxhp;
+        HPMask.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, percent * originalhpwidth);
     }
 
     public void Showjiasubiaoshi()
     {
-        if (Inventory.Instance.HasItem("BlackPaintBottle") && player.GetCurrentAreaType() == AreaType.Black) 
+        if (Inventory.Instance.HasItem("BlackPaintBottle") && player.GetCurrentAreaType() == GamePlayerLogic.AreaType.Black) 
         {
             bjiasubiaoshi.SetActive(true);
         }
-        else if(Inventory.Instance.HasItem("WhitePaintBottle") && player.GetCurrentAreaType() == AreaType.White)
+        else if(Inventory.Instance.HasItem("WhitePaintBottle") && player.GetCurrentAreaType() == GamePlayerLogic.AreaType.White)
         {
             wjiasubiaoshi.SetActive(true);
         }
