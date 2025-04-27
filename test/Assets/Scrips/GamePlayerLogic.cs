@@ -4,9 +4,15 @@ using System.Collections.Generic;
 using System;
 using Unity.VisualScripting;
 using Unity.Burst.CompilerServices;
+using Unity.PlasticSCM.Editor.WebApi;
+
 
 public class GamePlayerLogic : MonoBehaviour
 {
+    //玩家血量
+    private int maxhp  = 3;
+    public int currenthp { get; private set; }
+
     // 角色移动相关变量
     private float moveSpeed = 5f;
     private float sprintMultiplier = 1.5f;
@@ -75,16 +81,16 @@ public class GamePlayerLogic : MonoBehaviour
     }
     //重生点
     private Vector2 currentspwam;
-    private Vector2 lastspwam;
 
     //关卡出生点
     [Header("一至三关出生点")]
-    [SerializeField] private Vector3 _position1;
-    [SerializeField] private Vector3 _position2;
-    [SerializeField] private Vector3 _position3;
+    [SerializeField] private Vector2 _position1;
+    [SerializeField] private Vector2 _position2;
+    [SerializeField] private Vector2 _position3;
 
     public void InitializePlayer()//初始化玩家
     {
+        enabled = true; // 启用控制器
         rb = GetComponent<Rigidbody2D>();//for debug
         if (rb == null)
         {
@@ -92,20 +98,19 @@ public class GamePlayerLogic : MonoBehaviour
         }
 
         // 记录初始位置
-        lastPosition = rb.position;
+        //lastPosition = rb.position;
 
-
+        //记录出生点
+        currentspwam = rb.position;
     }
 
-    public void PlayerRespwam(Vector2 position)//在记录点重生,暂时让玩家重生后获得一黑一白颜料瓶
+    public void PlayerRespwam()
     {
-        rb.MovePosition(position);
-        SetBlackPaintValue(0);
-        SetWhitePaintValue(0);
-        OnDeath=null;
-        Inventory.Instance.InitializeInventory();
-        Inventory.Instance.AddItemToInventory("BlackPaintBottle", 1);
-        Inventory.Instance.AddItemToInventory("WhitePaintBottle", 1);
+        rb.MovePosition(currentspwam);
+        InitializePlayer();
+        blackPaintValue = 0;
+        whitePaintValue = 0;
+        OnDeath = null;
     }
 
     private void Update()//实时更新函数
@@ -124,16 +129,7 @@ public class GamePlayerLogic : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        // 处理移动
         HandleMovement();
-    }
-
-    public void RESpwam()
-    {
-        rb.transform.position = currentspwam;
-        blackPaintValue = 0;
-        whitePaintValue = 0;
-        Inventory.Instance.InitializeInventory();
     }
 
     private void HandleInput()//输入检测函数
@@ -169,9 +165,19 @@ public class GamePlayerLogic : MonoBehaviour
 
         //切换死亡界面
         UIController.Instance.SetGameState(UIController.GameState.GameOver);
+
+        currenthp=Mathf.Clamp(currenthp--, 0, maxhp);
     }
 
-    
+    //private void DieAndChangeHP()
+    //{
+    //    Die();
+    //    currenthp--;
+    //    if(currenthp < 0)
+    //    {
+    //        currenthp = 0;
+    //    }
+    //}
 
     private void HandlePaintValues()//颜料值处理函数
     {
@@ -244,8 +250,7 @@ public class GamePlayerLogic : MonoBehaviour
         if (collision.CompareTag("spwam"))
         {
             Debug.Log("设置出生点");
-            lastspwam=currentspwam;
-            currentspwam=collision.gameObject.transform.position;
+            currentspwam = collision.gameObject.transform.position;
             GameManager.Instance.hasrespwam = true;
         }
     }

@@ -16,7 +16,7 @@ public class Exit : MonoBehaviour
             gamePlayerLogic = collision.gameObject.GetComponent<GamePlayerLogic>();
             if (Inventory.Instance.HasItem("key", 3))//判断玩家是否集齐3把钥匙
             {
-                if(GameManager.Instance.CurrentLevel!=3)
+                if (GameManager.Instance.CurrentLevel != 3)
                 {
                     trapLogic.DeactivateTrap(); // 禁用陷阱逻辑
                     Inventory.Instance.RemoveItemFromInventory("key", 3);
@@ -25,11 +25,14 @@ public class Exit : MonoBehaviour
                     GameManager.Instance.NextLevel();//加载下一个关卡
                     GameManager.Instance.hasrespwam = false;
                 }
-                UIController.Instance.SetGameState(UIController.GameState.Win);
+                else
+                {
+                    UIController.Instance.SetGameState(UIController.GameState.Win);
+                }
             }
             else
             {
-                Debug.Log("钥匙不足，无法离开，当前："+ Inventory.Instance.GetItemCount("key"));
+                Debug.Log("钥匙不足，无法离开，当前：" + Inventory.Instance.GetItemCount("key"));
             }
         }
     }

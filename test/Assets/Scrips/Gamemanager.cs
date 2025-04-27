@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -46,6 +47,7 @@ public class GameManager : MonoBehaviour
         //初始化背包
         Inventory.Instance.InitializeInventory();
 
+
         switch (CurrentLevel)
         {
             case 1:
@@ -80,5 +82,6 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log($"重新开始当前关卡: {CurrentLevel}");
         InitializeLevelLogic();
+        hasrespwam = false;
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,41 +10,70 @@ using static GamePlayerLogic;
 //建议创建Canvas后挂载在里面的GamePanel下
 public class GameUI : MonoBehaviour
 {
-    public static GameUI Instance;
-
-    //下面这两个mask就是创建一个长方体来遮挡指示条
-    //通过减小mask的高度来减小指示值显示区域，mask的锚点需要设置在血条底部
-    //可以试试指针能不能和mask绑定在一起移动
-    public Image blackpaintmask;
-    public Image whitepaintmask;
-
-    public float originalHeight;//指示条原始高度
-    public GameObject wjiasubiaoshi;//白色变化加速标识
-    public GameObject bjiasubiaoshi;//黑色变化加速标识 
+    public static GameUI Instance; 
     public GamePlayerLogic player;
 
-    void Awake()
+    //加速标识
+    public GameObject wjiasubiaoshi;//白色变化加速标识
+    public GameObject bjiasubiaoshi;//黑色变化加速标识
+
+    //颜料值
+    private float originalWidth;//指示条原始宽度
+    public Image blackpaintmask;
+    public Image whitepaintmask; 
+
+    //物品栏物品数量
+    public TextMeshProUGUI WhiteBottle;
+    public TextMeshProUGUI BlackBottle;
+    public TextMeshProUGUI GeryBottle;
+    public TextMeshProUGUI Key;
+
+    //生命值
+    private float originalhpwidth;//血条原始宽度
+    public Image HPMask;
+
+    public void Awake()
     {
-        Instance = this;
-        originalHeight = blackpaintmask.rectTransform.rect.height;
-        wjiasubiaoshi.SetActive(false);
+        originalWidth = blackpaintmask.rectTransform.rect.height;
     }
 
     private void Update()
     {
         Showjiasubiaoshi();//更新是否显示加速标识
+        Debug.Log(UIController.Instance.Currentstate());
+    }
+    public void FixedUpdate()
+    {
+        //更新物品栏物品数量
+        if (Inventory.Instance != null)
+        {
+            int whiteBottleCount = Inventory.Instance.GetItemCount("WhitePaintBottle");
+            int blackBottleCount = Inventory.Instance.GetItemCount("BlackPaintBottle");
+            int geryBottleCount = Inventory.Instance.GetItemCount("GrayPaintBottle");
+            int keyCount = Inventory.Instance.GetItemCount("Key");
+            WhiteBottle.text = whiteBottleCount.ToString();
+            BlackBottle.text = blackBottleCount.ToString();
+            GeryBottle.text = geryBottleCount.ToString();
+            Key.text = keyCount.ToString();
+        }
     }
 
     //设置黑白颜料指示条ui
-    public void WhitePaintValueUI(float Percentofwhitepaintvalue)
+    public void WhitePaintValueUI()
     {
-        whitepaintmask.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Percentofwhitepaintvalue * originalHeight);
+        whitepaintmask.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, player.GetWhitePaintValue()/ player.GetMaxPaintValue() * originalWidth);
     }
-    public void BlackPaintValueUI(float Percentofblackpaintvalue)
+    public void BlackPaintValueUI()
     {
-        blackpaintmask.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Percentofblackpaintvalue * originalHeight);
+        blackpaintmask.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, player.GetBlackPaintValue()/ player.GetMaxPaintValue() * originalWidth);
     }
     
+    //设置血条UI
+    public void HPUI(float HPpercent)
+    {
+        HPMask.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, HPpercent * originalhpwidth);
+    }
+
     public void Showjiasubiaoshi()
     {
         if (Inventory.Instance.HasItem("BlackPaintBottle") && player.GetCurrentAreaType() == AreaType.Black) 
@@ -57,6 +87,7 @@ public class GameUI : MonoBehaviour
         else
         {
             wjiasubiaoshi.SetActive(false);
+            bjiasubiaoshi.SetActive(false);
         }
     }
 
@@ -65,3 +96,4 @@ public class GameUI : MonoBehaviour
         UIController.Instance.SetGameState(UIController.GameState.Pause);
     }
 }
+

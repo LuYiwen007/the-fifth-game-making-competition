@@ -55,7 +55,8 @@ public class UIController : MonoBehaviour
                 break;
             case GameState.Win:
                 _winInterface.gameObject.SetActive(true);
-                break;case GameState.Pause:
+                break;
+            case GameState.Pause:
                 _pauseInterface.gameObject.SetActive(true);
                 break;
         }
@@ -68,5 +69,36 @@ public class UIController : MonoBehaviour
         _overInterface.gameObject.SetActive(active);
         _winInterface.gameObject.SetActive(active);
         _pauseInterface.gameObject.SetActive(active);
+    }
+
+    public string Currentstate()
+    {
+        
+        {
+            if (_mainInterface.gameObject.activeSelf)
+            {
+                return "MainMenu";
+            }
+            else if (_gameInterface.gameObject.activeSelf)
+            {
+                return "InGame";
+            }
+            else if (_overInterface.gameObject.activeSelf)
+            {
+                return "GameOver";
+            }
+            else if (_winInterface.gameObject.activeSelf)
+            {
+                return "Win";
+            }
+            else if (_pauseInterface.gameObject.activeSelf)
+            {
+                return "Pause";
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }
