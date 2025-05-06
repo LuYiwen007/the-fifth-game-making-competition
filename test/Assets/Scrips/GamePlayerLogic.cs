@@ -35,23 +35,27 @@ public class GamePlayerLogic : MonoBehaviour
     private float whitePaintDecreaseRate = 1f; // 每移动两个坐标减少的白色颜料值
     private float moveDistanceCounter = 0f; // 移动距离计数器
     private float moveDistanceThreshold = 2f; // 移动距离阈值
-    
+    public GrayPaintBottle greyPaint;
+
     // 区域类型枚举
     public enum AreaType
     {
         Black,
         White,
         PermanentGray,
-        TemporaryGray
+        TemporaryGray,
+        Red // 添加红色区域类型
     }
-    
+
     // 当前区域类型
-    private AreaType currentAreaType = AreaType.Black;
-    
+    private AreaType currentAreaType/* = AreaType.Black*/;
+
     // 临时灰色区域相关
     private GameObject temporaryGrayAreaPrefab; // 临时灰色区域的预制体
+    private GameObject permanentGrayAreaPrefab; // 永久灰色区域的预制体
     private float temporaryGrayAreaDuration = 2f; // 临时灰色区域持续时间
-    
+    private bool canCreateTemporaryGray = true; // 是否可以创建临时灰色区域
+
     // 私有变量
     private Rigidbody2D rb;//挂载刚体组件
     private Vector2 moveDirection;
@@ -77,8 +81,10 @@ public class GamePlayerLogic : MonoBehaviour
         Black,
         White,
         Transparent,
-        Gray
+        Gray,
+        Red
     }
+
     //重生点
     private Vector2 currentspwam;
 
@@ -146,10 +152,10 @@ public class GamePlayerLogic : MonoBehaviour
             Interact();
         }
 
-        if(Input.GetKeyDown(KeyCode.B))
-        {
-            Debug.Log(Inventory.Instance.GetInventory());
-        }
+        //if(Input.GetKeyDown(KeyCode.B))
+        //{
+        //    Debug.Log(Inventory.Instance.GetInventory());
+        //}
     }
 
     // 死亡方法
@@ -182,18 +188,23 @@ public class GamePlayerLogic : MonoBehaviour
 
     private void HandlePaintValues()//颜料值处理函数
     {
-        //Debug.Log("黑色" + blackPaintValue + "白色" + whitePaintValue);
-        // 根据当前区域类型处理颜料值
         switch (currentAreaType)
         {
             case AreaType.Black:
                 // 黑色区域增加黑色颜料值
                 blackPaintValue = Mathf.Min(maxPaintValue, blackPaintValue + blackPaintIncreaseRate * Time.deltaTime);
+                if (whitePaintValue > 0) // 只要有白色颜料就自动生成
+                {
+                    CreateTemporaryGrayArea();
+                }
                 break;
                 
             case AreaType.White:
-                // 白色区域增加白色颜料值
                 whitePaintValue = Mathf.Min(maxPaintValue, whitePaintValue + whitePaintIncreaseRate * Time.deltaTime);
+                if (blackPaintValue > 0) // 只要有黑色颜料就自动生成
+                {
+                    CreateTemporaryGrayArea();
+                }
                 break;
                 
             case AreaType.PermanentGray:
@@ -201,15 +212,14 @@ public class GamePlayerLogic : MonoBehaviour
                 blackPaintValue = Mathf.Max(0, blackPaintValue - paintDecreaseRate * Time.deltaTime);
                 whitePaintValue = Mathf.Max(0, whitePaintValue - paintDecreaseRate * Time.deltaTime);
                 break;
-                
-            case AreaType.TemporaryGray:
-                // 临时灰色区域减少两种颜料值
-                blackPaintValue = Mathf.Max(0, blackPaintValue - paintDecreaseRate * Time.deltaTime);
-                whitePaintValue = Mathf.Max(0, whitePaintValue - paintDecreaseRate * Time.deltaTime);
+
+            case AreaType.Red:
+                // 在红色区域不允许创建临时灰色区域
+                canCreateTemporaryGray = false;
                 break;
         }
-        
-        // 触发颜料值变化事件
+
+        // 更新颜料值UI
         OnPaintValuesChanged?.Invoke(blackPaintValue, whitePaintValue);
         
 
@@ -223,16 +233,32 @@ public class GamePlayerLogic : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)// 检测进入的区域类型
     {
-        AreaTypeComponent areaComponent = collision.GetComponent<AreaTypeComponent>();
-        if (areaComponent != null)
+        AreaTypeComponent areaType = collision.gameObject.GetComponent<AreaTypeComponent>();
+        // 更新当前区域类型
+        if (/*collision.CompareTag("BlackArea")*/areaType.areaType == AreaType.Black) 
         {
-            AreaType newAreaType = areaComponent.areaType;
-            if (newAreaType != currentAreaType)
-            {
-                currentAreaType = newAreaType;
-                OnAreaChanged?.Invoke(currentAreaType);
-            }
+            currentAreaType = AreaType.Black;
         }
+        else if (/*collision.CompareTag("WhiteArea")*/areaType.areaType == AreaType.White)
+        {
+            currentAreaType = AreaType.White;
+        }
+        else if (/*collision.CompareTag("PermanentGrayArea")*/areaType.areaType == AreaType.PermanentGray)
+        {
+            currentAreaType = AreaType.PermanentGray;
+        }
+        else if (/*collision.CompareTag("TemporaryGray")*/areaType.areaType == AreaType.TemporaryGray)
+        {
+            currentAreaType = AreaType.TemporaryGray;
+        }
+        else if (/*collision.CompareTag("RedWall")*/areaType.areaType == AreaType.Red)
+        {
+            currentAreaType = AreaType.Red;
+            canCreateTemporaryGray = false;
+        }
+
+        // 触发区域变化事件
+        OnAreaChanged?.Invoke(currentAreaType);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)//捡到钥匙、踩到陷阱、保存记录点
@@ -327,21 +353,36 @@ public class GamePlayerLogic : MonoBehaviour
     
     private void CreateTemporaryGrayArea()//创建临时灰色区域函数
     {
-        // 如果黑色颜料值为0，不创建临时灰色区域
-        if (blackPaintValue <= 0)
-        {
+        // 如果在红色区域或者不允许创建，直接返回
+        if (currentAreaType == AreaType.Red || !canCreateTemporaryGray)
             return;
-        }
-        
-        // 创建临时灰色区域
-        if (temporaryGrayAreaPrefab != null)
+
+        float paintToDecrease = 5f; // 每次创建消耗的颜料值
+        bool canCreate = false;
+
+        // 根据当前区域类型决定消耗哪种颜料
+        if (currentAreaType == AreaType.Black && whitePaintValue >= paintToDecrease)
         {
-            GameObject temporaryArea = Instantiate(temporaryGrayAreaPrefab, transform.position, Quaternion.identity);
-            // 设置临时灰色区域的持续时间
-            TemporaryGrayArea temporaryGrayArea = temporaryArea.GetComponent<TemporaryGrayArea>();
-            if (temporaryGrayArea != null)
+            whitePaintValue -= paintToDecrease;
+            canCreate = true;
+        }
+        else if (currentAreaType == AreaType.White && blackPaintValue >= paintToDecrease)
+        {
+            blackPaintValue -= paintToDecrease;
+            canCreate = true;
+        }
+
+        if (canCreate && temporaryGrayAreaPrefab != null)
+        {
+            // 创建临时灰色区域
+            Vector3 position = transform.position;
+            GameObject grayArea = Instantiate(temporaryGrayAreaPrefab, position, Quaternion.identity);
+            
+            // 设置持续时间
+            TemporaryGrayArea temporaryGrayAreaComponent = grayArea.GetComponent<TemporaryGrayArea>();
+            if (temporaryGrayAreaComponent != null)
             {
-                temporaryGrayArea.SetDuration(temporaryGrayAreaDuration);
+                temporaryGrayAreaComponent.SetDuration(temporaryGrayAreaDuration);
             }
         }
     }
@@ -502,6 +543,43 @@ public class GamePlayerLogic : MonoBehaviour
             colorState = PlayerColorState.Transparent;
         }
         ChangeColor(colorState);
+    }
+
+    // 使用灰色颜料瓶创建永久灰色区域
+    public void CreatePermanentGrayArea()
+    {
+        if (Inventory.Instance.GetItemCount("GrayPaintBottle") >= 1)
+        {
+            Inventory.Instance.RemoveItemFromInventory("GrayPaintBottle", 1);
+            greyPaint.InitializeGreyPaint();
+        }
+
+        if (permanentGrayAreaPrefab != null && GetCurrentAreaType() != AreaType.PermanentGray)
+        {
+            // 消耗颜料并生成区域
+            greyPaint.ConsumePaint();
+            Vector3 position = transform.position;
+            Instantiate(permanentGrayAreaPrefab, position, Quaternion.identity);
+        }
+    }
+
+    //public float GetGreyPaintValue()
+    //{
+    //    return greyPaintValue;
+    //}
+
+    // 当获得灰色颜料瓶时调用此方法
+    //public void AddGreyPaint()
+    //{
+    //    greyPaintValue = maxPaintValue; // 新的颜料瓶有满值的颜料
+    //}
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("RedWall"))
+        {
+            canCreateTemporaryGray = true;
+        }
     }
 }
 

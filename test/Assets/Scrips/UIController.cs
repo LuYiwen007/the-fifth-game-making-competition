@@ -9,16 +9,18 @@ public class UIController : MonoBehaviour
     public static UIController Instance { get; private set; }
     [Header("界面容器")]
     [SerializeField] private Transform _mainInterface;
-    [SerializeField] private Transform _gameInterface;//这个界面是游戏的ui，就是包含颜料指示条那个
+    [SerializeField] private Transform _gameInterface;
     [SerializeField] private Transform _overInterface;
     [SerializeField] private Transform _winInterface;
     [SerializeField] private Transform _pauseInterface;
+    [SerializeField] private Transform _storyInterface;
 
     public enum GameState
     {
         MainMenu,
         InGame,
         Pause,
+        Story,
         GameOver,
         Win
     }
@@ -27,7 +29,7 @@ public class UIController : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this.gameObject); // 防止重复创建
+            Destroy(gameObject);
         }
         else
         {
@@ -59,6 +61,9 @@ public class UIController : MonoBehaviour
             case GameState.Pause:
                 _pauseInterface.gameObject.SetActive(true);
                 break;
+            case GameState.Story:
+                _storyInterface.gameObject.SetActive(true);
+                break;
         }
     }
 
@@ -69,9 +74,10 @@ public class UIController : MonoBehaviour
         _overInterface.gameObject.SetActive(active);
         _winInterface.gameObject.SetActive(active);
         _pauseInterface.gameObject.SetActive(active);
+        _storyInterface.gameObject.SetActive(active);
     }
 
-    public string Currentstate()
+    public string Currentstate()//获取当前界面状态
     {
         
         {
@@ -94,6 +100,10 @@ public class UIController : MonoBehaviour
             else if (_pauseInterface.gameObject.activeSelf)
             {
                 return "Pause";
+            }
+            else if(_storyInterface.gameObject.activeSelf)
+            {
+                return "Story";
             }
             else
             {

@@ -44,18 +44,18 @@ public class GameUI : MonoBehaviour
     }
     public void FixedUpdate()
     {
-        //更新物品栏物品数量
-        if (Inventory.Instance != null)
-        {
-            int whiteBottleCount = Inventory.Instance.GetItemCount("WhitePaintBottle");
-            int blackBottleCount = Inventory.Instance.GetItemCount("BlackPaintBottle");
-            int geryBottleCount = Inventory.Instance.GetItemCount("GrayPaintBottle");
-            int keyCount = Inventory.Instance.GetItemCount("Key");
-            WhiteBottle.text = whiteBottleCount.ToString();
-            BlackBottle.text = blackBottleCount.ToString();
-            GeryBottle.text = geryBottleCount.ToString();
-            Key.text = keyCount.ToString();
-        }
+        ////更新物品栏物品数量
+        //if (Inventory.Instance != null)
+        //{
+        //    int whiteBottleCount = Inventory.Instance.GetItemCount("WhitePaintBottle");
+        //    int blackBottleCount = Inventory.Instance.GetItemCount("BlackPaintBottle");
+        //    int geryBottleCount = Inventory.Instance.GetItemCount("GrayPaintBottle");
+        //    int keyCount = Inventory.Instance.GetItemCount("Key");
+        //    WhiteBottle.text = whiteBottleCount.ToString();
+        //    BlackBottle.text = blackBottleCount.ToString();
+        //    GeryBottle.text = geryBottleCount.ToString();
+        //    Key.text = keyCount.ToString();
+        //}
     }
 
     //设置黑白颜料指示条ui
@@ -75,14 +75,27 @@ public class GameUI : MonoBehaviour
         HPMask.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, percent * originalhpwidth);
     }
 
+    //加速标识控制器
     public void Showjiasubiaoshi()
     {
         if (Inventory.Instance.HasItem("BlackPaintBottle") && player.GetCurrentAreaType() == GamePlayerLogic.AreaType.Black) 
         {
             bjiasubiaoshi.SetActive(true);
+            wjiasubiaoshi.SetActive(false);
         }
         else if(Inventory.Instance.HasItem("WhitePaintBottle") && player.GetCurrentAreaType() == GamePlayerLogic.AreaType.White)
         {
+            bjiasubiaoshi.SetActive(false);
+            wjiasubiaoshi.SetActive(true);
+        }
+        else if (Inventory.Instance.HasItem("WhitePaintBottle")&& Inventory.Instance.HasItem("BlackPaintBottle")&& player.GetCurrentAreaType() == GamePlayerLogic.AreaType.Black)
+        {
+            bjiasubiaoshi.SetActive(true);
+            wjiasubiaoshi.SetActive(false);
+        }
+        else if (Inventory.Instance.HasItem("WhitePaintBottle") && Inventory.Instance.HasItem("BlackPaintBottle") && player.GetCurrentAreaType() == GamePlayerLogic.AreaType.White)
+        {
+            bjiasubiaoshi.SetActive(false);
             wjiasubiaoshi.SetActive(true);
         }
         else
