@@ -19,19 +19,19 @@ public class StoryPanel : MonoBehaviour
     {
         // 初始化关卡剧情
         levelStories.Add(1, new string[] {
-            "欢迎来到第一关！",
-            "这里是一个充满挑战的世界。",
-            "准备好迎接冒险了吗？"
+            "恭喜你通过第一关！"
         });
 
         levelStories.Add(2, new string[] {
-            "第二关开始了！",
-            "敌人变得更强了。",
-            "小心前方的陷阱！"
+            "恭喜你通过第二关！"
         });
 
         // 显示第一句剧情
         ShowCurrentStory();
+
+        // 初始化背景图片
+        UpdateBackground();
+        SetBackgroundByIndex(currentLevel);
     }
 
     private void ShowCurrentStory()
@@ -52,14 +52,7 @@ public class StoryPanel : MonoBehaviour
     {
         // 点击后显示下一句剧情
         currentStoryIndex++;
-
-        // 切换背景（如果有背景）
-        if (backgrounds.Count > 0)
-        {
-            currentBackgroundIndex = (currentBackgroundIndex + 1) % backgrounds.Count;
-            backgroundImage.sprite = backgrounds[currentBackgroundIndex];
-        }
-
+        
         ShowCurrentStory();
     }
 
@@ -71,19 +64,46 @@ public class StoryPanel : MonoBehaviour
         // 切换到下一关
         currentLevel++;
 
-        if (levelStories.ContainsKey(currentLevel))
+        if (currentLevel <= 3)
         {
-            // 显示下一关剧情
-            ShowCurrentStory();
+            GameManager.Instance.NextLevel();
         }
         else
         {
-            // 如果没有更多关卡，隐藏剧情面板
-            Debug.Log("所有关卡剧情已播放完毕！");
-            gameObject.SetActive(false);
+            UIController.Instance.SetGameState(UIController.GameState.Win);
+        }
+    }
 
-            // 调用 GameManager 进入下一关
-            GameManager.Instance.NextLevel();
+    private void UpdateBackground()
+    {
+        if (backgrounds.Count > 0 && currentBackgroundIndex < backgrounds.Count)
+        {
+            backgroundImage.sprite = backgrounds[currentBackgroundIndex];
+        }
+        else
+        {
+            Debug.LogWarning("背景图片列表为空或索引超出范围！");
+        }
+    }
+
+    public void NextBackground()
+    {
+        // 切换到下一张背景图片
+        currentBackgroundIndex = (currentBackgroundIndex + 1) % backgrounds.Count;
+        UpdateBackground();
+    }
+
+    public void SetBackgroundByIndex(int index)
+    {
+        // 根据索引切换背景图片
+        if (index >= 0 && index < backgrounds.Count)
+        {
+            currentBackgroundIndex = index;
+            UpdateBackground();
+        }
+        else
+        {
+            Debug.LogWarning("背景索引超出范围！");
         }
     }
 }
