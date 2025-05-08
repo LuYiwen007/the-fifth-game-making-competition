@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Xml.Serialization;
 
 public class StoryPanel : MonoBehaviour
 {
@@ -32,6 +33,14 @@ public class StoryPanel : MonoBehaviour
         // ≥ı ºªØ±≥æ∞Õº∆¨
         UpdateBackground();
         SetBackgroundByIndex(currentLevel);
+    }
+
+    private void Update()
+    {
+        if (Input.anyKeyDown)
+        {
+            OnStoryClick();
+        }
     }
 
     private void ShowCurrentStory()
