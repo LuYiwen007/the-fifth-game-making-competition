@@ -9,7 +9,6 @@ using UnityEngine.UI;
 //建议创建Canvas后挂载在里面的GamePanel下
 public class GameUI : MonoBehaviour
 {
-
     public static GameUI Instance; 
     public GamePlayerLogic player;
 
@@ -20,13 +19,7 @@ public class GameUI : MonoBehaviour
     //颜料值
     private float originalWidth;//指示条原始宽度
     public Image blackpaintmask;
-    public Image whitepaintmask; 
-
-    //物品栏物品数量
-    public TextMeshProUGUI WhiteBottle;
-    public TextMeshProUGUI BlackBottle;
-    public TextMeshProUGUI GeryBottle;
-    public TextMeshProUGUI Key;
+    public Image whitepaintmask;
 
     //生命值
     private float originalhpwidth;//血条原始宽度
@@ -42,23 +35,8 @@ public class GameUI : MonoBehaviour
     {
         Showjiasubiaoshi();//更新是否显示加速标识
     }
-    public void FixedUpdate()
-    {
-        ////更新物品栏物品数量
-        //if (Inventory.Instance != null)
-        //{
-        //    int whiteBottleCount = Inventory.Instance.GetItemCount("WhitePaintBottle");
-        //    int blackBottleCount = Inventory.Instance.GetItemCount("BlackPaintBottle");
-        //    int geryBottleCount = Inventory.Instance.GetItemCount("GrayPaintBottle");
-        //    int keyCount = Inventory.Instance.GetItemCount("Key");
-        //    WhiteBottle.text = whiteBottleCount.ToString();
-        //    BlackBottle.text = blackBottleCount.ToString();
-        //    GeryBottle.text = geryBottleCount.ToString();
-        //    Key.text = keyCount.ToString();
-        //}
-    }
 
-    //设置黑白颜料指示条ui
+    //设置黑白颜料指示条UI
     public void WhitePaintValueUI()
     {
         whitepaintmask.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, player.GetWhitePaintValue()/ player.GetMaxPaintValue() * originalWidth);
@@ -107,6 +85,7 @@ public class GameUI : MonoBehaviour
 
     public void OnPauseButtonClick()
     {
+        player.gameObject.GetComponent<Rigidbody2D>().simulated = false;
         UIController.Instance.SetGameState(UIController.GameState.Pause);
     }
 }

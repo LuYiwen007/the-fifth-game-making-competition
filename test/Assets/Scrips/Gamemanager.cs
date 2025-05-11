@@ -12,9 +12,11 @@ public class GameManager : MonoBehaviour
     public TrapLogic trapLogic; 
     public GamePlayerLogic player;
     public bool hasrespwam=false;
+    private GameObject[] keys;
 
     private void Awake()
     {
+        keys=GameObject.FindGameObjectsWithTag("key");
         if (Instance == null)
         {
             Instance = this;
@@ -82,6 +84,10 @@ public class GameManager : MonoBehaviour
     }
     public void RestartLevel()
     {
+        foreach (GameObject key in keys)
+        {
+            key.SetActive(true);
+        }
         Debug.Log($"重新开始当前关卡: {CurrentLevel}");
         InitializeLevelLogic();
         hasrespwam = false;

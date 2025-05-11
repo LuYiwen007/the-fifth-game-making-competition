@@ -164,6 +164,7 @@ public class GamePlayerLogic : MonoBehaviour
         Debug.Log("角色死亡");
         // 触发死亡事件
         OnDeath?.Invoke();
+        currenthp = Mathf.Clamp(currenthp--, 0, maxhp);
 
         // 禁用控制器
         enabled = false;
@@ -173,19 +174,7 @@ public class GamePlayerLogic : MonoBehaviour
         //切换死亡界面
         UIController.Instance.SetGameState(UIController.GameState.GameOver);
 
-        //GameUI.Instance.HPUI();
     }
-
-    //private void DieAndChangeHP()
-    //{
-    //    Die();
-    //    currenthp--;
-    //    if(currenthp < 0)
-    //    {
-    //        currenthp = 0;
-    //    }
-    //}
-
     private void HandlePaintValues()//颜料值处理函数
     {
         switch (currentAreaType)
@@ -266,7 +255,7 @@ public class GamePlayerLogic : MonoBehaviour
         if (collision.CompareTag("key"))
         {
             Inventory.Instance.AddItemToInventory("key", 1);
-            Destroy(collision.gameObject);
+            collision.gameObject.SetActive(false); //隐藏钥匙
             Debug.Log("获得钥匙,当前"+ Inventory.Instance.GetItemCount("key"));
         }
         if (collision.CompareTag("trap"))

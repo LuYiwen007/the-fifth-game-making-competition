@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 /// <summary>
 /// MC风格底部物品栏UI脚本，挂在物品栏Panel上
 /// </summary>
 public class InventoryBarUI : MonoBehaviour
 {
+    public List<TextMeshProUGUI> slotCount; // 每个格子的数量显示
     // 物品栏每个格子的Image（Inspector中拖入，顺序与UI一致）
     public List<Image> slotImages;
     // 每个格子的高光边框Image（Inspector中拖入，顺序与UI一致）
@@ -26,12 +27,13 @@ public class InventoryBarUI : MonoBehaviour
         if (interactionActive) return;
 
         // 鼠标滚轮/左右键切换选中物品
-        if (Input.GetAxis("Mouse ScrollWheel") > 0.01f || Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetAxis("Mouse ScrollWheel") > 0.01f /*|| Input.GetKeyDown(KeyCode.RightArrow)*/)
             selectedIndex = (selectedIndex + 1) % slotImages.Count;
-        if (Input.GetAxis("Mouse ScrollWheel") < -0.01f || Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetAxis("Mouse ScrollWheel") < -0.01f /*|| Input.GetKeyDown(KeyCode.LeftArrow)*/)
             selectedIndex = (selectedIndex - 1 + slotImages.Count) % slotImages.Count;
 
         UpdateHighlight();
+
     }
 
     /// <summary>
@@ -52,13 +54,20 @@ public class InventoryBarUI : MonoBehaviour
         {
             if (i < itemNames.Count)
             {
-                slotImages[i].sprite = GetSpriteByName(itemNames[i]);
+                string itemName = itemNames[i];
+                slotImages[i].sprite = GetSpriteByName(itemName);
                 slotImages[i].color = Color.white;
+
+                // 获取物品数量并更新数量显示
+                int itemCount = Inventory.Instance.GetItemCount(itemName);
+                slotCount[i].text = itemCount > 0 ? itemCount.ToString() : "";
+                slotCount[i].gameObject.SetActive(true);
             }
             else
             {
-                slotImages[i].sprite = emptySlotSprite;
+                slotImages[i].sprite = emptySlotSprite; 
                 slotImages[i].color = new Color(1,1,1,0.3f);
+                slotCount[i].gameObject.SetActive(false); // 隐藏数量显示
             }
         }
         UpdateHighlight();

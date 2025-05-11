@@ -2,9 +2,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class InteractionItemUI : MonoBehaviour
 {
+    //物品栏物品数量
+    public TextMeshProUGUI WhiteBottle;
+    public TextMeshProUGUI BlackBottle;
+    public TextMeshProUGUI GeryBottle;
+    public TextMeshProUGUI Key;
+
     // 物品名称：UI预制体（需带Image和Text组件）
     public GameObject labelPrefab;
     // UI在角色右侧的水平偏移距离
