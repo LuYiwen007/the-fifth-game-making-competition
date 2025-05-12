@@ -25,7 +25,12 @@ public class StoryPanel : MonoBehaviour
 
         levelStories.Add(2, new string[] {
             "恭喜你通过第二关！"
+        }); 
+        levelStories.Add(3, new string[] {
+             "恭喜你通过第三关！",
+             "你已经完成了所有挑战！"
         });
+
 
         // 显示第一句剧情
         ShowCurrentStory();
@@ -45,6 +50,7 @@ public class StoryPanel : MonoBehaviour
 
     private void ShowCurrentStory()
     {
+        int currentLevel = GameManager.Instance.CurrentLevel; // 使用 GameManager 的关卡状态
         if (levelStories.ContainsKey(currentLevel) && currentStoryIndex < levelStories[currentLevel].Length)
         {
             // 显示当前剧情文本
@@ -71,16 +77,7 @@ public class StoryPanel : MonoBehaviour
         currentStoryIndex = 0;
 
         // 切换到下一关
-        currentLevel++;
-
-        if (currentLevel <= 3)
-        {
-            GameManager.Instance.NextLevel();
-        }
-        else
-        {
-            UIController.Instance.SetGameState(UIController.GameState.Win);
-        }
+        GameManager.Instance.NextLevel(); // 直接调用 GameManager 的 NextLevel 方法
     }
 
     private void UpdateBackground()
