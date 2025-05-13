@@ -7,37 +7,43 @@ using System.Xml.Serialization;
 
 public class StoryPanel : MonoBehaviour
 {
-    public TextMeshProUGUI storyText; // 用于显示剧情文本
-    public Image backgroundImage; // 用于切换背景
-    public List<Sprite> backgrounds; // 背景图片列表
-    private int currentBackgroundIndex = 0; // 当前背景索引
-
-    private Dictionary<int, string[]> levelStories = new Dictionary<int, string[]>(); // 存储每个关卡的剧情
-    private int currentLevel = 1; // 当前关卡
-    private int currentStoryIndex = 0; // 当前剧情索引
+    public TextMeshProUGUI storyText;
+    public Image backgroundImage;
+    public List<Sprite> backgrounds;
+    private int currentBackgroundIndex = 0;
+    private int currentLevel;
+    private Dictionary<int, string[]> levelStories = new Dictionary<int, string[]>();
+    private int currentStoryIndex = 0;
 
     private void Start()
     {
         // 初始化关卡剧情
         levelStories.Add(1, new string[] {
+            "恭喜你通过第一关！",
+            "恭喜你通过第一关！",
+            "恭喜你通过第一关！",
             "恭喜你通过第一关！"
         });
 
         levelStories.Add(2, new string[] {
-            "恭喜你通过第二关！"
-        }); 
-        levelStories.Add(3, new string[] {
-             "恭喜你通过第三关！",
-             "你已经完成了所有挑战！"
+            "恭喜你通过第二关！",
+            "恭喜你通过第二关！",
+            "恭喜你通过第二关！",
+            "恭喜你通过第二关！",
         });
 
+        levelStories.Add(3, new string[] {
+            "恭喜你通过第三关！",
+            "你已经完成了所有挑战！"
+        });
+    }
 
-        // 显示第一句剧情
+    private void OnEnable()
+    {
+        currentLevel = GameManager.Instance.CurrentLevel; // 正确赋值
+        currentStoryIndex = 0; // 每次激活时重置剧情索引
         ShowCurrentStory();
-
-        // 初始化背景图片
-        UpdateBackground();
-        SetBackgroundByIndex(currentLevel);
+        SetBackgroundByIndex(currentLevel - 1); // 关卡1对应索引0
     }
 
     private void Update()
@@ -48,36 +54,50 @@ public class StoryPanel : MonoBehaviour
         }
     }
 
+    public void OnStoryClick()
+    {
+        currentStoryIndex++;
+        ShowCurrentStory();
+    }
+
     private void ShowCurrentStory()
     {
-        int currentLevel = GameManager.Instance.CurrentLevel; // 使用 GameManager 的关卡状态
-        if (levelStories.ContainsKey(currentLevel) && currentStoryIndex < levelStories[currentLevel].Length)
+        if (/*levelStories.ContainsKey(currentLevel) &&*/ currentStoryIndex < levelStories[currentLevel].Length)
         {
-            // 显示当前剧情文本
             storyText.text = levelStories[currentLevel][currentStoryIndex];
         }
         else
         {
-            // 剧情结束，进入下一关
             EnterNextLevel();
         }
     }
 
-    public void OnStoryClick()
-    {
-        // 点击后显示下一句剧情
-        currentStoryIndex++;
-        
-        ShowCurrentStory();
-    }
-
     private void EnterNextLevel()
     {
-        // 重置剧情索引
-        currentStoryIndex = 0;
+        // 如果是最后一关，直接胜利
+        if (GameManager.Instance.CurrentLevel >= 3)
+        {
+            UIController.Instance.SetGameState(UIController.GameState.Win);
+        }
+        else
+        {
+            // 进入下一关
+            GameManager.Instance.NextLevel();
+        }
+    }
 
-        // 切换到下一关
-        GameManager.Instance.NextLevel(); // 直接调用 GameManager 的 NextLevel 方法
+    // 设置背景图片
+    public void SetBackgroundByIndex(int index)
+    {
+        if (index >= 0 && index < backgrounds.Count)
+        {
+            currentBackgroundIndex = index;
+            UpdateBackground();
+        }
+        else
+        {
+            Debug.LogWarning("背景索引超出范围！");
+        }
     }
 
     private void UpdateBackground()
@@ -89,27 +109,6 @@ public class StoryPanel : MonoBehaviour
         else
         {
             Debug.LogWarning("背景图片列表为空或索引超出范围！");
-        }
-    }
-
-    public void NextBackground()
-    {
-        // 切换到下一张背景图片
-        currentBackgroundIndex = (currentBackgroundIndex + 1) % backgrounds.Count;
-        UpdateBackground();
-    }
-
-    public void SetBackgroundByIndex(int index)
-    {
-        // 根据索引切换背景图片
-        if (index >= 0 && index < backgrounds.Count)
-        {
-            currentBackgroundIndex = index;
-            UpdateBackground();
-        }
-        else
-        {
-            Debug.LogWarning("背景索引超出范围！");
         }
     }
 }

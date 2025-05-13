@@ -16,12 +16,13 @@ public class Exit : MonoBehaviour
             gamePlayerLogic = collision.gameObject.GetComponent<GamePlayerLogic>();
             if (Inventory.Instance.HasItem("key", 3))//ÅÐ¶ÏÍæ¼ÒÊÇ·ñ¼¯Æë3°ÑÔ¿³×
             {
-                    trapLogic.DeactivateTrap(); // ½ûÓÃÏÝÚåÂß¼­
-                    Inventory.Instance.RemoveItemFromInventory("key", 3);
-                    //Animator animator = gameObject.GetComponent<Animator>();
-                    //animator.SetTrigger("Exit");// ²¥·Å¶¯»­
-                    UIController.Instance.SetGameState(UIController.GameState.Story);
-                    GameManager.Instance.hasrespwam = false;
+                 trapLogic.DeactivateTrap(); // ½ûÓÃÏÝÚåÂß¼­
+                 Inventory.Instance.RemoveItemFromInventory("key", 3);
+                 //Animator animator = gameObject.GetComponent<Animator>();
+                 //animator.SetTrigger("Exit");// ²¥·Å¶¯»­
+                 gamePlayerLogic.gameObject.GetComponent<Rigidbody2D>().simulated = false;
+                 UIController.Instance.SetGameState(UIController.GameState.Story);
+                 GameManager.Instance.hasrespwam = false;
             }
             else
             {

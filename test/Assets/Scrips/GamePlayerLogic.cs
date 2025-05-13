@@ -103,6 +103,7 @@ public class GamePlayerLogic : MonoBehaviour
             Debug.LogError("未找到Rigidbody2D组件");
         }
 
+        rb.simulated=true; // 启用物理模拟
         // 记录初始位置
         //lastPosition = rb.position;
 

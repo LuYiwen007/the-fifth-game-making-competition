@@ -30,20 +30,12 @@ public class GameManager : MonoBehaviour
     }
     public void NextLevel()
     {
-        // 检查是否是最后一关
-        if (CurrentLevel >= 3)
-        {
-            // 显示胜利面板
-            UIController.Instance.SetGameState(UIController.GameState.Win);
-        }
-        else
-        {
-            CurrentLevel++;
-            Debug.Log($"当前关卡: {CurrentLevel}");
-            InitializeLevelLogic();
-        }
+        CurrentLevel++;
+        Debug.Log($"当前关卡: {CurrentLevel}");
+        InitializeLevelLogic();
+        UIController.Instance.SetGameState(UIController.GameState.InGame);
     }
-    private void InitializeLevelLogic()//初始化关卡，用于开始游戏和重新开始关卡
+    public void InitializeLevelLogic()//初始化关卡，用于开始游戏和重新开始关卡
     {
         {
             //初始化玩家
